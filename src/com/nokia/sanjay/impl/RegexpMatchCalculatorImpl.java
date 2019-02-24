@@ -2,6 +2,7 @@ package com.nokia.sanjay.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,10 +22,10 @@ import com.nokia.sanjay.util.Utilities;
 public class RegexpMatchCalculatorImpl implements RegexpMatchCalculator {
 
 	public RegexCalculatedMatchDTO findRegexpMatch(CharSequence sourceCharSequence) throws RegexpException {
-		
-		//Get value of RegEx expression from the property file 
+
+		// Get value of RegEx expression from the property file
 		String regExpressionValue = Utilities.getPropertyValue(Constants.regExpressionString);
-		
+
 		// Data object to be returned
 		RegexCalculatedMatchDTO regexCalculatedMatchDTO = null;
 
@@ -52,24 +53,52 @@ public class RegexpMatchCalculatorImpl implements RegexpMatchCalculator {
 			// List of matched items with the full regular expression
 			List<String> listOfMatchedItems = new ArrayList<String>();
 
-			//Instantiate the return object
+			// Instantiate the return object
 			regexCalculatedMatchDTO = new RegexCalculatedMatchDTO();
+
+			for (int i = 1; i <= totalGroupCount; i++) {
+
+				regexCalculatedMatchDTO.getMapOfMatchedString().put(i, new ArrayList<String>());
+
+			}
+			System.out.println("Structure is : " + regexCalculatedMatchDTO.getMapOfMatchedString());
 
 			while (matcher.find()) {
 
 				// Add result of sub-regex according to the group number (ie. 1, 2, 3...)
 				for (int i = 1; i <= totalGroupCount; i++) {
-					regexCalculatedMatchDTO.getMapOfMatchedString().put(i, new ArrayList<String>());
-					List<String> listEntry = regexCalculatedMatchDTO.getMapOfMatchedString().get(i);
-					listEntry.add(matcher.group(i));
+					// regexCalculatedMatchDTO.getMapOfMatchedString().put(i, new
+					// ArrayList<String>());
+					// List<String> listEntry =
+					// regexCalculatedMatchDTO.getMapOfMatchedString().get(i);
+					//
+
+					regexCalculatedMatchDTO.getMapOfMatchedString().get(i).add(matcher.group(i));
+
+					// System.out.println("magical value is : "+matcher.group(i));
+					// System.out.println("Updated map :
+					// "+regexCalculatedMatchDTO.getMapOfMatchedString() );
+
+					// System.out.println("listEntry is :
+					// "+regexCalculatedMatchDTO.getMapOfMatchedString().get(i));
+					// regexCalculatedMatchDTO.getMapOfMatchedString().put(i,regexCalculatedMatchDTO.getMapOfMatchedString().get(i));
 				}
 
 				listOfMatchedItems.add(matcher.group());
 				totalMatchFound++;
 			}
 
+			for (Integer key : regexCalculatedMatchDTO.getMapOfMatchedString().keySet()) {
+
+				System.out.println("Size of the list at index : " + key + " is : "
+						+ regexCalculatedMatchDTO.getMapOfMatchedString().get(key).size());
+				
+				System.out.println("elemets of the list at : "+key+" is : "+regexCalculatedMatchDTO.getMapOfMatchedString().get(key));
+
+			}
+
 			// Adding all matched element at 0th position of the map
-			regexCalculatedMatchDTO.getMapOfMatchedString().put(0, listOfMatchedItems);
+			// regexCalculatedMatchDTO.getMapOfMatchedString().put(0, listOfMatchedItems);
 
 			// Show result
 			System.out.println("Total match count is : " + totalMatchFound);
