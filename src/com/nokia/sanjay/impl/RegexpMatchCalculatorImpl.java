@@ -25,10 +25,16 @@ public class RegexpMatchCalculatorImpl implements RegexpMatchCalculator {
 
 		// Get value of RegEx expression from the property file
 		String regExpressionValue = Utilities.getPropertyValue(Constants.regExpressionString);
+		
+		
+		//Source string is 
+		System.out.println("Source string : "+sourceCharSequence);
+		
+		
 
 		// Data object to be returned
 		RegexCalculatedMatchDTO regexCalculatedMatchDTO = null;
-
+		
 		if (null == sourceCharSequence) {
 
 			throw new RegexpException(103, "Source string is null! Please provide some valid data to calculate on!");
@@ -39,8 +45,9 @@ public class RegexpMatchCalculatorImpl implements RegexpMatchCalculator {
 
 			System.out.println("Value of the property regexp is : " + regExpressionValue);
 
-			Pattern pattern = Pattern.compile(regExpressionValue);
+			Pattern pattern = Pattern.compile(regExpressionValue, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = pattern.matcher(sourceCharSequence);
+			
 
 			System.out.println("group count in the regex : " + matcher.groupCount());
 
